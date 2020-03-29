@@ -1,8 +1,8 @@
 FROM ubuntu:bionic 
 
-LABEL version="1.4"
+LABEL version="1.5"
 LABEL description="SIFT Docker based on Ubuntu 18.04 LTS"
-LABEL maintainer="https://github.com/fetchered/sift18-docker"
+LABEL maintainer="https://github.com/digitalsleuth/sift-docker"
 
 ENV container docker 
 ENV TERM linux
@@ -60,7 +60,7 @@ echo 'forensics:forensics' | chpasswd && \
 usermod -a -G sudo forensics
 RUN sudo sift install --pre-release --mode=packages-only --user=forensics
 RUN apt-get autoremove -y && apt-get purge && apt-get clean && \
-git clone https://gist.github.com/fetchered/c6c711f30c2bd5452aa37a5b12a57474 /tmp/colorssh && \
+git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh && \
 cd /tmp/colorssh && cat color_ssh_terminal >> /home/forensics/.bashrc && cd /tmp && rm -rf colorssh && \
 echo source .bashrc >> /home/forensics/.bash_profile && \
 chown forensics:forensics /home/forensics/.bashrc
