@@ -1,4 +1,4 @@
-# sift-docker - ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/digitalsleuth/sift-docker)
+# sift-docker  ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/digitalsleuth/sift-docker)
 A SANS SIFT Docker built on Ubuntu 18.04 LTS   
 
 Recommend creating a docker network with subnet for future networking between other dockers (if required)
