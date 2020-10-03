@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL version="2.0"
+LABEL version="2.1"
 LABEL description="SIFT Docker based on Ubuntu 18.04 LTS"
 LABEL maintainer="https://github.com/digitalsleuth/sift-docker"
 
@@ -35,6 +35,9 @@ git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh && \
 cd /tmp/colorssh && cat color_ssh_terminal >> /home/forensics/.bashrc && cd /tmp && rm -rf colorssh && \
 echo source .bashrc >> /home/forensics/.bash_profile && \
 chown forensics:forensics /home/forensics/.bashrc
+RUN rm -rf /var/cache/salt/* && \
+rm -rf /srv/* && \
+rm -rf /root/.cache/*
 
 WORKDIR /home/forensics
 
