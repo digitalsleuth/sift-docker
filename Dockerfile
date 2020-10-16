@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-LABEL version="2.1"
+LABEL version="2.2"
 LABEL description="SIFT Docker based on Ubuntu 18.04 LTS"
 LABEL maintainer="https://github.com/digitalsleuth/sift-docker"
 
@@ -21,7 +21,7 @@ chown -R forensics:forensics /home/forensics && \
 usermod -a -G sudo forensics && \
 echo 'forensics:forensics' | chpasswd
 
-RUN DEBIAN_FRONTEND=noninteractive sudo sift install --mode=packages-only --user=forensics
+RUN DEBIAN_FRONTEND=noninteractive sudo sift install --mode=packages-only --user=forensics --pre-release
 RUN cd /mnt && mkdir aff bde e01 ewf ewf_mount iscsi shadow_mount usb vss windows_mount windows_mount1 windows_mount2 windows_mount3 windows_mount4 windows_mount5 && \
 cd shadow_mount && for i in {1..30}; do mkdir vss$i; done && \
 apt-get autoremove -y && apt-get purge && apt-get clean && \
