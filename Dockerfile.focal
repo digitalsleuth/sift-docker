@@ -8,7 +8,7 @@ USER root
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
-    apt-get install -y wget gnupg git curl sudo && \
+    apt-get install -y wget gnupg git curl sudo openssh-server && \
     wget -nv -O - https://repo.saltstack.com/py3/ubuntu/20.04/amd64/3001/SALTSTACK-GPG-KEY.pub | apt-key add - && \
     echo deb [arch=amd64] http://repo.saltstack.com/py3/ubuntu/20.04/amd64/3001 focal main > /etc/apt/sources.list.d/saltstack.list && \
     apt-get update && \
