@@ -1,0 +1,28 @@
+version: "3.0"
+
+services:
+  sift:
+    privileged: True
+    image: digitalsleuth/sift-docker:focal
+    container_name: sift-focal
+    hostname: sift-focal
+    networks:
+      sift_net:
+        ipv4_address: 172.18.0.2
+    cap_add:
+      - SYS_ADMIN
+      - MKNOD
+    devices:
+      - "/dev/fuse:/dev/fuse"
+    #volumes:
+      #- 
+    ports:
+      - 33:22
+    restart: unless-stopped
+
+networks:
+  sift_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.18.0.0/24"
