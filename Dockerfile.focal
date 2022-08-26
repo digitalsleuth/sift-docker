@@ -1,26 +1,31 @@
 FROM ubuntu:20.04
 
-LABEL version="3.0"
+LABEL version="4.0"
 LABEL description="SANS Investigative Forensic Toolkit based on Ubuntu 20.04 LTS"
 LABEL maintainer="Corey Forman (github.com/digitalsleuth)"
+ARG SIFT_CLI=v1.14.0-rc1
+ARG SIFT_USER=sansforensics
+ARG SIFT_DESCRIPTION="SANSForensics User"
+ARG SIFT_PASSWORD=forensics
 
 USER root
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y wget gnupg git curl sudo openssh-server && \
-    wget -nv -O - https://repo.saltstack.com/py3/ubuntu/20.04/amd64/3001/SALTSTACK-GPG-KEY.pub | apt-key add - && \
-    echo deb [arch=amd64] http://repo.saltstack.com/py3/ubuntu/20.04/amd64/3001 focal main > /etc/apt/sources.list.d/saltstack.list && \
+    wget -nv -O - https://repo.saltproject.io/py3/ubuntu/20.04/amd64/latest/salt-archive-keyring.gpg | apt-key add - && \
+    echo deb [arch=amd64] https://repo.saltproject.io/py3/ubuntu/20.04/amd64/3004 focal main > /etc/apt/sources.list.d/saltstack.list && \
     apt-get update && \
     apt-get install -y salt-common && \
-    groupadd -r sansforensics && \
-    useradd -r -g sansforensics -d /home/sansforensics -s /bin/bash -c "SANSForensics User" sansforensics && \
-    mkdir /home/sansforensics && \
-    usermod -a -G sudo sansforensics && \
-    echo 'sansforensics:forensics' | chpasswd && \
-    curl -Lo /usr/local/bin/sift https://github.com/teamdfir/sift-cli/releases/download/v1.9.2/sift-cli-linux && \
+    groupadd -r ${SIFT_USER} && \
+    useradd -r -g ${SIFT_USER} -d /home/${SIFT_USER} -s /bin/bash -c "${SIFT_DESCRIPTION}" ${SIFT_USER} && \
+    mkdir /home/${SIFT_USER} && \
+    usermod -a -G sudo ${SIFT_USER}
+
+RUN echo ${SIFT_USER}:${SIFT_PASSWORD} | chpasswd && \
+    curl -Lo /usr/local/bin/sift https://github.com/teamdfir/sift-cli/releases/download/${SIFT_CLI}/sift-cli-linux && \
     chmod +x /usr/local/bin/sift && \
-    sudo sift install --mode=server --user=sansforensics && \
+    sudo sift install --mode server --user ${SIFT_USER} && \
     cd /mnt && mkdir aff bde e01 ewf ewf_mount iscsi shadow_mount usb vss windows_mount windows_mount1 windows_mount2 windows_mount3 windows_mount4 windows_mount5 && \
     cd shadow_mount && for i in {1..30}; do mkdir vss$i; done && \
     echo "UseDNS no" >> /etc/ssh/sshd_config && \
@@ -30,9 +35,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     echo "X11DisplayOffset 10" >> /etc/ssh/sshd_config && \
     echo "X11UseLocalhost no" >> /etc/ssh/sshd_config && \
     git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh && \
-    cd /tmp/colorssh && cat color_ssh_terminal >> /home/sansforensics/.bashrc && cd /tmp && rm -rf colorssh && \
-    echo source .bashrc >> /home/sansforensics/.bash_profile && \
-    chown -R sansforensics:sansforensics /home/sansforensics && \
+    cd /tmp/colorssh && cat color_ssh_terminal >> /home/${SIFT_USER}/.bashrc && cd /tmp && rm -rf colorssh && \
+    echo source .bashrc >> /home/${SIFT_USER}/.bash_profile && \
+    chown -R ${SIFT_USER}:${SIFT_USER} /home/${SIFT_USER} && \
     apt-get autoremove -y && apt-get purge && apt-get clean && \
     rm -rf /srv && \
     rm -rf /var/cache/salt/* && \
@@ -40,7 +45,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     unset DEBIAN_FRONTEND
 
 ENV TERM linux
-WORKDIR /home/sansforensics
+WORKDIR /home/${SIFT_USER}
 
 RUN mkdir /var/run/sshd
 EXPOSE 22
