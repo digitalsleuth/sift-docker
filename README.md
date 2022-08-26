@@ -1,14 +1,14 @@
 # sift-docker  ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/digitalsleuth/sift-docker)
-A SANS SIFT Docker built on Ubuntu 18.04 LTS   
+A SANS SIFT Docker built on Ubuntu 18.04 and 20.04 LTS   
 
-Recommend creating a docker network with subnet for future networking between other dockers (if required)
+Using the docker-compose.yaml file included will create a docker network with subnet for future networking between other dockers (if required)
+It will also add a custom IP to that network (for ease of connecting), enable the privileged, cap_add SYS_ADMIN and MKNOD features, as well as adding the
+device /dev/fuse to enable full mounting capability and FUSE level access.
 
-`sudo docker pull digitalsleuth/sift-docker`
+Customize the .yaml file for either the Bionic or Focal image, IP address and subsequent volumes.
 
-`sudo docker network create --subnet=172.20.0.0/16 sift_net`
+An additional feature of this build is the use of X11 Forwarding. Once the docker is up and running (using `sudo docker-compose up -d`), use the following:
 
-`sudo docker run -v <local_folder_to_share>:<share_point_in_docker> --net sift_net --hostname sift --ip 172.20.0.3 --privileged --cap-add SYS_ADMIN --cap-add MKNOD --device /dev/fuse digitalsleuth/sift-docker`
+`ssh -X sansforensics@<ip_address>`
 
-Once the docker is running, connect using: ssh -X forensics@172.20.0.3 User and password are both 'forensics'
-
-Added 'runsift.sh' for new users to docker to allow for quick and easy access.
+This will enable X11 forwarding to allow for GUI access to any GUI-enabled applications (such as `bless`).
