@@ -6,7 +6,7 @@ LABEL maintainer="Corey Forman (github.com/digitalsleuth)"
 ARG SIFT_CLI=v1.14.0-rc1
 ARG SIFT_USER=sansforensics
 ARG SIFT_DESCRIPTION="SANSForensics User"
-ARG SIFT_PASSWORD=forensics
+ARG SIFT_PASSWORD="forensics"
 
 USER root
 
@@ -20,9 +20,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     groupadd -r ${SIFT_USER} && \
     useradd -r -g ${SIFT_USER} -d /home/${SIFT_USER} -s /bin/bash -c "${SIFT_DESCRIPTION}" ${SIFT_USER} && \
     mkdir /home/${SIFT_USER} && \
-    usermod -a -G sudo ${SIFT_USER}
-
-RUN echo ${SIFT_USER}:${SIFT_PASSWORD} | chpasswd && \
+    usermod -a -G sudo ${SIFT_USER} && \
+    echo "${SIFT_USER}:${SIFT_PASSWORD}" | chpasswd && \
     curl -Lo /usr/local/bin/sift https://github.com/teamdfir/sift-cli/releases/download/${SIFT_CLI}/sift-cli-linux && \
     chmod +x /usr/local/bin/sift && \
     sudo sift install --mode server --user ${SIFT_USER} && \
