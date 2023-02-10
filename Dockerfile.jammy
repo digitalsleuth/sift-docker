@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 LABEL version="5.0"
-LABEL description="SANS Investigative Forensic Toolkit based on Ubuntu 20.04 LTS"
+LABEL description="SANS Investigative Forensic Toolkit based on Ubuntu 22.04 LTS"
 LABEL maintainer="Corey Forman (github.com/digitalsleuth)"
 ARG CAST_VERSION=v0.14.0
 ARG SIFT_USER=sansforensics
