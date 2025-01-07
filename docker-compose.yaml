@@ -1,8 +1,6 @@
-version: "3.0"
-
 services:
   sift:
-    privileged: True
+    privileged: true
     image: digitalsleuth/sift-docker:<TAG>
     container_name: sift-<TAG>
     hostname: sift-<TAG>
@@ -15,7 +13,7 @@ services:
     devices:
       - "/dev/fuse:/dev/fuse"
     #volumes:
-      #- 
+      #- ./files:/home/sansforensics/files/:ro
     ports:
       - "33:22"
     restart: unless-stopped
@@ -25,4 +23,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.18.0.0/24"
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

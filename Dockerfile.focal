@@ -1,13 +1,13 @@
 FROM ubuntu:20.04
 
-LABEL version="5.0"
+LABEL version="6.0"
 LABEL description="SANS Investigative Forensic Toolkit based on Ubuntu 20.04 LTS"
 LABEL maintainer="Corey Forman (github.com/digitalsleuth)"
-LABEL sift_release="v2023.02.06"
-ARG CAST_VERSION=0.14.0
+LABEL sift_release="v2024.11.14"
+ARG CAST_VERSION=0.15.8
 ARG SIFT_USER=sansforensics
 ARG SIFT_DESCRIPTION="SANSForensics User"
-ARG SIFT_PASSWORD="forensics"
+ARG SIFT_PASS="forensics"
 
 USER root
 
@@ -18,14 +18,15 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     groupadd -r -g 1000 ${SIFT_USER} && \
     useradd -r -g ${SIFT_USER} -d /home/${SIFT_USER} -s /bin/bash -c "${SIFT_DESCRIPTION}" -u 1000 ${SIFT_USER} && \
     mkdir /home/${SIFT_USER} && \
+    mkdir -p /etc/apt/keyrings && \
     touch /home/${SIFT_USER}/.Xauthority && \
     chown -R ${SIFT_USER}:${SIFT_USER} /home/${SIFT_USER} && \
     usermod -a -G sudo ${SIFT_USER} && \
-    echo "${SIFT_USER}:${SIFT_PASSWORD}" | chpasswd && \
-    wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cast_v${CAST_VERSION}_linux_amd64.deb && \
-    dpkg -i /tmp/cast_v${CAST_VERSION}_linux_amd64.deb && \
+    echo "${SIFT_USER}:${SIFT_PASS}" | chpasswd && \
+    wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cast-v${CAST_VERSION}-linux-amd64.deb && \
+    dpkg -i /tmp/cast-v${CAST_VERSION}-linux-amd64.deb && \
     cast install --mode server --user ${SIFT_USER} sift && \
-    rm /tmp/cast_v${CAST_VERSION}_linux_amd64.deb
+    rm /tmp/cast-v${CAST_VERSION}-linux-amd64.deb
 
 RUN echo "UseDNS no" >> /etc/ssh/sshd_config && \
     echo "GSSAPIAuthentication no" >> /etc/ssh/sshd_config && \
@@ -41,9 +42,13 @@ RUN echo "UseDNS no" >> /etc/ssh/sshd_config && \
     rm -rf /srv && \
     rm -rf /var/cache/salt/* && \
     rm -rf /root/.cache/* && \
+    cd /mnt && mkdir aff bde e01 ewf ewf_mount iscsi shadow_mount usb vss windows_mount && \
+    for i in $(seq 1 5); do mkdir windows_mount$i; done && \
+    cd shadow_mount && \
+    for i in $(seq 1 30); do mkdir vss$i; done && \
     unset DEBIAN_FRONTEND
 
-ENV TERM linux
+ENV TERM=linux
 WORKDIR /home/${SIFT_USER}
 
 RUN mkdir /var/run/sshd
