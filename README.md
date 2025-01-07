@@ -1,4 +1,4 @@
-# sift-docker  ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/digitalsleuth/sift-docker)
+# sift-docker  
 A SANS SIFT Docker built on Ubuntu 20.04 and 22.04 LTS   
 
 Using the docker-compose.yaml file included will create a docker network with subnet for future networking between other dockers (if required)
